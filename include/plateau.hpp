@@ -1,6 +1,6 @@
 #pragma once
 
-class Piece {
+class Plateau {
     private:
         // ----------------------------------------------------------------------------
         // private attribute

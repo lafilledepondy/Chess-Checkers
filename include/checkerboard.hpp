@@ -1,6 +1,6 @@
 #pragma once
 
-class Piece {
+class Checkerboard: public Plateau {
     private:
         // ----------------------------------------------------------------------------
         // private attribute
