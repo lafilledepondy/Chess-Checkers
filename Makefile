@@ -1,5 +1,3 @@
-# Makefile for ChessèCheckers Project
-
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 CPPFLAGS = -MMD -MP
