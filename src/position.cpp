@@ -4,6 +4,9 @@
 
 #include "position.hpp"
 
+#include <cctype>
+#include <stdexcept>
+
 Position::Position(int x, int y) {
     this->_x = x;
     this->_y = y;
@@ -15,9 +18,23 @@ Position::Position(const Position &p, int dx, int dy) {
 }
 
 Position::Position(std::string str) {
+    std::size_t i = 0;
+    int x = 0;
 
-    this->_x = str[0] - 'A' + 1;
-    this->_y = str[1] - '0';
+    while (i < str.size() && isalpha(str[i])) {
+        char c = toupper(str[i]);
+        x = x * 26 + (c - 'A' + 1);
+        i++;
+    }
+
+    int y = 0;
+    while (i < str.size() && isdigit(str[i])) {
+        y = y * 10 + (str[i] - '0');
+        i++;
+    }
+
+    this->_x = x;
+    this->_y = y;
 }
 
 int Position::getX() const {
@@ -30,8 +47,17 @@ int Position::getY() const {
 
 std::string Position::toString() const {
     std::ostringstream oss;
+    int x = this->_x;
+    std::string column;
+
+    while (x > 0) {
+        x -= 1;
+        column.insert(column.begin(), static_cast<char>('A' + (x % 26)));
+        x /= 26;
+    }
+
     oss << "[";
-    oss << char(this->_x + 'A' - 1);
+    oss << column;
     oss << std::to_string(this->_y);
     oss << "]";
     return oss.str();

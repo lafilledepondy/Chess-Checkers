@@ -13,6 +13,14 @@ Plateau::Plateau(int height, int width) {
     }
 }
 
+void Plateau::movePiece(const Position &start_pos, const Position &end_pos) {
+    // TODO
+}
+
+void Plateau::addPiece(Piece * pi, const Position &pos){
+    // TODO
+}
+
 int Plateau::getHeight() const {
     return plateau_vec.size();
 }
@@ -34,14 +42,6 @@ Piece * Plateau::getPiece(const Position &pos) {
 }
 
 void Plateau::play(const Position &start_pos, const Position &end_pos, bool turnBlack) {
-    // TODO
-}
-
-void Plateau::addPiece(Piece * pi, const Position &pos){
-    // TODO
-}
-
-void Plateau::movePiece(const Position &start_pos, const Position &end_pos, bool turnBlack) {
     Piece *piece_start = getPiece(start_pos); 
     Piece *piece_end = getPiece(end_pos); 
 

@@ -27,7 +27,7 @@ protected:
     // methods
     // ----------------------------------------------------------------------------
     void addPiece(Piece *pi, const Position &pos);
-    void movePiece(const Position &start_pos, const Position &end_pos, bool turnBlack);
+    void movePiece(const Position &start_pos, const Position &end_pos);
 
 public:
     // ----------------------------------------------------------------------------
