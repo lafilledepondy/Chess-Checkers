@@ -21,8 +21,8 @@ class Plateau {
         // ----------------------------------------------------------------------------
         // methods
         // ----------------------------------------------------------------------------         
-        void add(Piece * &pi, const Position &pos);
-        void move(const Position &start_pos, const Position &end_pos);  
+        void addPiece(Piece * pi, const Position &pos);
+        void movePiece(const Position &start_pos, const Position &end_pos);  
 
     public:
 

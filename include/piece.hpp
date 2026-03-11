@@ -23,7 +23,7 @@ class Piece {
         // abstract methods
         // ---------------------------------------------------------------------------- 
         virtual bool isValidMove(const Position &start_pos, const Position &end_pos, 
-            bool isCapture, Plateau* board) = 0;
+            bool isCapture, Plateau* board) const  = 0;
 
         // ----------------------------------------------------------------------------
         // methods

@@ -1,8 +1,8 @@
 #include "piece.hpp"
 
 Piece::Piece(bool isBlack, std::string name) {
-    this->_name = name;
     this->_isBlack = isBlack;
+    this->_name = name;
 }
 
 std::string Piece::toString() const {

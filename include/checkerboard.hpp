@@ -1,6 +1,7 @@
 #pragma once
 
 #include "plateau.hpp"
+#include "pawn.hpp"
 
 class Checkerboard: public Plateau {
     public:

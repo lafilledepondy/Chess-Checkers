@@ -22,7 +22,7 @@ int Plateau::getWidth() const {
 
 bool Plateau::isInside(const Position &pos) const {
     // TODO
-    
+
     // if (plateau_vec[pos.getX()] == nullptr && plateau_vec[pos.getY()] == nullptr) {
     //     return false; 
     // }
@@ -38,10 +38,10 @@ void Plateau::turn(const Position &start_pos, const Position &end_pos, bool turn
     // TODO
 }
 
-void Plateau::add(Piece * &pi, const Position &pos){
+void Plateau::addPiece(Piece * pi, const Position &pos){
     // TODO
 }
 
-void Plateau::move(const Position &start_pos, const Position &end_pos) {
+void Plateau::movePiece(const Position &start_pos, const Position &end_pos) {
     // TODO
 }
