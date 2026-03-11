@@ -17,6 +17,6 @@ class Checkerboard: public Plateau {
         // ----------------------------------------------------------------------------
         // methods
         // ----------------------------------------------------------------------------         
-        void initialesConditions();
+        void initialConditions();
         std::string toString() const;
 };

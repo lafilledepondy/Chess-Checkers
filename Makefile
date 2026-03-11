@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 CPPFLAGS = -MMD -MP
 TARGET = main
-SRC_DIR = scr
+SRC_DIR = src
 INCLUDE_DIR = include
 BUILD_DIR = build
 SOURCES = $(shell find $(SRC_DIR) -name '*.cpp')

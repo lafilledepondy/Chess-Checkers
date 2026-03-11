@@ -39,12 +39,12 @@ class Plateau {
         // ----------------------------------------------------------------------------
         // abstract methods
         // ---------------------------------------------------------------------------- 
-        virtual void initialesConditions() = 0;
+        virtual void initialConditions() = 0;
 
         // ----------------------------------------------------------------------------
         // methods
         // ----------------------------------------------------------------------------         
         bool isInside(const Position &pos) const;
         Piece * getPiece(const Position &pos);
-        void turn(const Position &start_pos, const Position &end_pos, bool turnBlack);
+        void play(const Position &start_pos, const Position &end_pos, bool turnBlack);
 };

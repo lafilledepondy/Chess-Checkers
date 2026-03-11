@@ -1,9 +1,8 @@
 #include "checkerboard.hpp"
 
-
 Checkerboard::Checkerboard():Plateau(8, 8) {}
        
-void Checkerboard::initialesConditions() {
+void Checkerboard::initialConditions() {
     // TODO 
 
     addPiece(new Pawn(true), Position(0, 0));
