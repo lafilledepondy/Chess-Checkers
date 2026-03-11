@@ -14,11 +14,14 @@ Plateau::Plateau(int height, int width) {
 }
 
 void Plateau::movePiece(const Position &start_pos, const Position &end_pos) {
-    // TODO
+    Piece *piece_start = getPiece(start_pos); 
+
+    plateau_vec[end_pos.getY() - 1][end_pos.getX() - 1] = piece_start;
+    plateau_vec[start_pos.getY() - 1][start_pos.getX() - 1] = nullptr;
 }
 
 void Plateau::addPiece(Piece * pi, const Position &pos){
-    // TODO
+    plateau_vec[pos.getY() - 1][pos.getX() - 1] = pi;
 }
 
 int Plateau::getHeight() const {
@@ -26,6 +29,9 @@ int Plateau::getHeight() const {
 }
 
 int Plateau::getWidth() const {
+    if (plateau_vec.empty()) {
+        return 0;
+    }
     return plateau_vec[0].size();
 }
 
@@ -59,6 +65,5 @@ void Plateau::play(const Position &start_pos, const Position &end_pos, bool turn
         throw InvalidMoveException(5, "invalid move by the piece.", 2);
     }
 
-    plateau_vec[end_pos.getY() - 1][end_pos.getX() - 1] = piece_start;
-    plateau_vec[start_pos.getY() - 1][start_pos.getX() - 1] = nullptr;
+    movePiece(start_pos, end_pos);
 }
