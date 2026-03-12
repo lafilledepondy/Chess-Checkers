@@ -6,33 +6,33 @@
 #include "exception.hpp"
 
 Plateau::Plateau(int height, int width) {
-    plateau_vec.resize(height);
+    plateau_vec.resize(height + 1);
 
-    for (int i_height=0; i_height<height; i_height++) {
-        plateau_vec[i_height].resize(width, nullptr);
+    for (int i_height=0; i_height<=height; i_height++) {
+        plateau_vec[i_height].resize(width + 1, nullptr);
     }
 }
 
 void Plateau::movePiece(const Position &start_pos, const Position &end_pos) {
     Piece *piece_start = getPiece(start_pos); 
 
-    plateau_vec[end_pos.getY() - 1][end_pos.getX() - 1] = piece_start;
-    plateau_vec[start_pos.getY() - 1][start_pos.getX() - 1] = nullptr;
+    plateau_vec[end_pos.getY()][end_pos.getX()] = piece_start;
+    plateau_vec[start_pos.getY()][start_pos.getX()] = nullptr;
 }
 
 void Plateau::addPiece(Piece * pi, const Position &pos){
-    plateau_vec[pos.getY() - 1][pos.getX() - 1] = pi;
+    plateau_vec[pos.getY()][pos.getX()] = pi;
 }
 
 int Plateau::getHeight() const {
-    return plateau_vec.size();
+    return plateau_vec.size() - 1;
 }
 
 int Plateau::getWidth() const {
     if (plateau_vec.empty()) {
         return 0;
     }
-    return plateau_vec[0].size();
+    return plateau_vec[0].size() - 1;
 }
 
 bool Plateau::isInside(const Position &pos) const {
@@ -44,7 +44,7 @@ Piece * Plateau::getPiece(const Position &pos) const {
     if (!isInside(pos)) {
         throw InvalidMoveException(1, "Outside of the board.", 3);
     }
-    return plateau_vec[pos.getY() - 1][pos.getX() - 1];    
+    return plateau_vec[pos.getY()][pos.getX()];
 }
 
 void Plateau::play(const Position &start_pos, const Position &end_pos, bool turnBlack) {
