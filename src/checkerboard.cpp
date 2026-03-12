@@ -62,8 +62,6 @@ void Checkerboard::initialConditions() {
 }
 
 std::string Checkerboard::toString() const {
-    // TODO 
-
     std::ostringstream oss;
     oss << "\n" ;
     for (int x = 0; x <= getWidth(); x++) {
