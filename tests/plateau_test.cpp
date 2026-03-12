@@ -23,14 +23,14 @@ public:
     }
 };
 
-TEST(PlateauTest, BoardSize) {
+TEST(PlateauTest, GetSize) {
     TestPlateau p(8,8);
 
     EXPECT_EQ(p.getHeight(), 8);
     EXPECT_EQ(p.getWidth(), 8);
 }
 
-TEST(PlateauTest, PositionInsideBoard) {
+TEST(PlateauTest, IsInside) {
     TestPlateau p(8,8);
 
     Position pos(3,4);
@@ -38,7 +38,7 @@ TEST(PlateauTest, PositionInsideBoard) {
     EXPECT_TRUE(p.isInside(pos));
 }
 
-TEST(PlateauTest, PositionOutsideBoard) {
+TEST(PlateauTest, NotInside) {
     TestPlateau p(8,8);
 
     Position pos1(0,4);
@@ -48,7 +48,7 @@ TEST(PlateauTest, PositionOutsideBoard) {
     EXPECT_FALSE(p.isInside(pos2));
 }
 
-TEST(PlateauTest, GetPieceOutsideBoardThrows) {
+TEST(PlateauTest, GetPieceNotInsideThrows) {
     TestPlateau p(8,8);
 
     Position pos(9,1);
@@ -56,7 +56,7 @@ TEST(PlateauTest, GetPieceOutsideBoardThrows) {
     EXPECT_THROW(p.getPiece(pos), InvalidMoveException);
 }
 
-TEST(PlateauTest, AddPieceWorks) {
+TEST(PlateauTest, AddPiece) {
     TestPlateau p(8,8);
 
     Position pos(2,3);
@@ -67,7 +67,7 @@ TEST(PlateauTest, AddPieceWorks) {
     EXPECT_EQ(p.getPiece(pos), piece);
 }
 
-TEST(PlateauTest, MovePieceWorks) {
+TEST(PlateauTest, MovePiece) {
     TestPlateau p(8,8);
 
     Position start(2,2);

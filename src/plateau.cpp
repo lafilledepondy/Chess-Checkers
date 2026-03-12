@@ -40,7 +40,7 @@ bool Plateau::isInside(const Position &pos) const {
             pos.getY() > 0 && pos.getY() <= getHeight() ;
 }
 
-Piece * Plateau::getPiece(const Position &pos) {
+Piece * Plateau::getPiece(const Position &pos) const {
     if (!isInside(pos)) {
         throw InvalidMoveException(1, "Outside of the board.", 3);
     }

@@ -44,6 +44,6 @@ class Plateau {
         // methods
         // ----------------------------------------------------------------------------
         bool isInside(const Position &pos) const;
-        Piece *getPiece(const Position &pos);
+        Piece *getPiece(const Position &pos) const;
         void play(const Position &start_pos, const Position &end_pos, bool turnBlack);
 };

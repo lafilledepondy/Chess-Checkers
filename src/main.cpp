@@ -28,7 +28,6 @@ White move:
 > D3
 */
 
-
 int main() {
   std::cout << "+==============================================================+" << std::endl;
   std::cout << "|                       CHESS & CHECKERS                       |" << std::endl;
@@ -37,6 +36,8 @@ int main() {
   // Checkerboard cb;
 
   // cb.initialesConditions();
+
+
 
   return 0;
 }

@@ -61,4 +61,4 @@ std::string Position::toString() const {
     oss << std::to_string(this->_y);
     oss << "]";
     return oss.str();
-}
+} 
