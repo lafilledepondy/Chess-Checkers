@@ -28,14 +28,19 @@ Checkerboard setupBoard() {
 TEST(PawnTest, DoubleStepAfterMoveThrows) {
     Checkerboard cb = setupBoard();
 
-    EXPECT_THROW(cb.play(Position("B7"), Position("B5"), false), InvalidMoveException); // p1 double step
-}  
+    EXPECT_THROW(
+        cb.play(Position("B5"), Position("B3"), false),
+        InvalidMoveException
+    );
+} 
 
 TEST(PawnTest, ValidForwardMove) {
     Checkerboard cb = setupBoard();
 
-    EXPECT_NO_THROW(cb.play(Position("B3"), Position("B4"), true));  // P2 forward
-}  
+    EXPECT_NO_THROW(
+        cb.play(Position("B3"), Position("B4"), true)
+    );
+}
 
 TEST(PawnTest, PiecesMovedCorrectly) {
     Checkerboard cb = setupBoard();
@@ -50,7 +55,9 @@ TEST(PawnTest, PiecesMovedCorrectly) {
 TEST(PawnTest, ValidDiagonalCapture) {
     Checkerboard cb = setupBoard();
 
-    EXPECT_NO_THROW(cb.play(Position("B5"), Position("C4"), false));
+    EXPECT_NO_THROW(
+        cb.play(Position("B5"), Position("C4"), false)
+    );
 
     EXPECT_EQ(cb.getPiece(Position("B5")), nullptr);
     EXPECT_NE(cb.getPiece(Position("C4")), nullptr);
@@ -60,11 +67,30 @@ TEST(PawnTest, InvalidDiagonalWithoutCapture) {
     Checkerboard cb;
     cb.initialConditions();
 
-    EXPECT_THROW(cb.play(Position("B7"), Position("A6"), false), InvalidMoveException);
+    EXPECT_THROW(
+        cb.play(Position("B7"), Position("A6"), false),
+        InvalidMoveException
+    );
 }
 
 TEST(PawnTest, InvalidBackwardMove) {
-    Checkerboard cb = setupBoard();
+    Checkerboard cb;
+    cb.initialConditions();
 
-    EXPECT_THROW(cb.play(Position("B6"), Position("B7"), false), InvalidMoveException);
+    cb.play(Position("B7"), Position("B6"), false);
+
+    EXPECT_THROW(
+        cb.play(Position("B6"), Position("B7"), false),
+        InvalidMoveException
+    );
+}
+
+TEST(PawnTest, ForwardBlockedThrows) {
+    Checkerboard cb = setupBoard();
+    cb.play(Position("B3"), Position("B4"), true);
+
+    EXPECT_THROW(
+        cb.play(Position("B5"), Position("B4"), false),
+        InvalidMoveException
+    );
 }
