@@ -7,7 +7,7 @@ bool Bishop::isValidMove(const Position &start_pos, const Position &end_pos, boo
     int dy = abs(end_pos.getY() - start_pos.getY());
     Piece* target = board->getPiece(end_pos);
 
-    // No move
+    // no move
     if (dx == 0 && dy == 0) return false;
 
     // straight diagonal
