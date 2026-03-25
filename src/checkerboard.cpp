@@ -1,5 +1,6 @@
 #include "checkerboard.hpp"
 
+#include <cctype>
 #include <cmath>
 #include <fstream>
 #include <sstream>
@@ -236,10 +237,11 @@ void Checkerboard::saveToFile(const std::string& filename) const {
     }
 }
 
-void Checkerboard::loadFromFile(const std::string& filename) {
+std::vector<Checkerboard::ReplayMove> Checkerboard::readMovesFromFile(const std::string& filename) const {
+    std::vector<ReplayMove> moves;
     std::ifstream file(filename);
     if (!file.is_open()) {
-        return;
+        return moves;
     }
 
     std::string line;
@@ -250,6 +252,13 @@ void Checkerboard::loadFromFile(const std::string& filename) {
         while (!value.empty() && (value.back() == '\r' || value.back() == ' ' || value.back() == '\t')) {
             value.pop_back();
         }
+    };
+
+    auto upper = [](std::string value) {
+        for (char& c : value) {
+            c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+        }
+        return value;
     };
 
     while (std::getline(file, line)) {
@@ -287,6 +296,24 @@ void Checkerboard::loadFromFile(const std::string& filename) {
             continue;
         }
 
-        play(Position(from), Position(to), turn == "BLACK");
+        try {
+            moves.push_back({
+                upper(turn) == "BLACK",
+                Position(from),
+                Position(to)
+            });
+        }
+        catch (const std::exception&) {
+            // Ignore malformed lines and continue parsing the rest of the replay file.
+            continue;
+        }
+    }
+
+    return moves;
+}
+
+void Checkerboard::loadFromFile(const std::string& filename) {
+    for (const ReplayMove& move : readMovesFromFile(filename)) {
+        play(move.from, move.to, move.turnBlack);
     }
 }
