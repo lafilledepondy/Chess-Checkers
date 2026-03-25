@@ -3,8 +3,8 @@
 Bishop::Bishop(bool isBlack):Piece(isBlack, "bishop") {}
 
 bool Bishop::isValidMove(const Position &start_pos, const Position &end_pos, bool isCapture, Plateau* board) const {
-    int dx = abs(end_pos.getX() - start_pos.getX());
-    int dy = abs(end_pos.getY() - start_pos.getY());
+    const int dx = abs(end_pos.getX() - start_pos.getX());
+    const int dy = abs(end_pos.getY() - start_pos.getY());
     Piece* target = board->getPiece(end_pos);
 
     // no move
@@ -14,8 +14,8 @@ bool Bishop::isValidMove(const Position &start_pos, const Position &end_pos, boo
     if (dx != dy) return false;
 
     // check path
-    int stepX = (end_pos.getX() > start_pos.getX()) ? 1 : -1;
-    int stepY = (end_pos.getY() > start_pos.getY()) ? 1 : -1;
+    const int stepX = (end_pos.getX() > start_pos.getX()) ? 1 : -1;
+    const int stepY = (end_pos.getY() > start_pos.getY()) ? 1 : -1;
     int x = start_pos.getX() + stepX;
     int y = start_pos.getY() + stepY;
 

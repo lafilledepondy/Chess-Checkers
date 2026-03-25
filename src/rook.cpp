@@ -5,8 +5,8 @@ Rook::Rook(bool isBlack):Piece(isBlack, "rook") {}
 bool Rook::isValidMove(const Position &start_pos, const Position &end_pos, bool isCapture, Plateau* board) const {
     // TODO: first move with rook
 
-    int dx = abs(end_pos.getX() - start_pos.getX());
-    int dy = abs(end_pos.getY() - start_pos.getY());
+    const int dx = abs(end_pos.getX() - start_pos.getX());
+    const int dy = abs(end_pos.getY() - start_pos.getY());
     Piece* target = board->getPiece(end_pos);
 
     // no move
@@ -16,8 +16,8 @@ bool Rook::isValidMove(const Position &start_pos, const Position &end_pos, bool 
     if (!(dx == 0 || dy == 0)) return false;
 
     // check path
-    int stepX = dx == 0 ? 0 : (end_pos.getX() > start_pos.getX() ? 1 : -1); // 0: no move ; 1: move right -1: move left
-    int stepY = dy == 0 ? 0 : (end_pos.getY() > start_pos.getY() ? 1 : -1); 
+    const int stepX = dx == 0 ? 0 : (end_pos.getX() > start_pos.getX() ? 1 : -1); // 0: no move ; 1: move right -1: move left
+    const int stepY = dy == 0 ? 0 : (end_pos.getY() > start_pos.getY() ? 1 : -1); 
 
     int x = start_pos.getX() + stepX;
     int y = start_pos.getY() + stepY;

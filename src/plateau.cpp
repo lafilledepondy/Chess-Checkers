@@ -2,8 +2,13 @@
 // PLATEAU : 
 // ==============================================================================
 
+#include <cmath>
+
 #include "plateau.hpp"
 #include "exception.hpp"
+#include "pawn.hpp"
+#include "rook.hpp"
+#include "king.hpp"
 
 Plateau::Plateau(int height, int width) {
     plateau_vec.resize(height + 1);
@@ -65,5 +70,39 @@ void Plateau::play(const Position &start_pos, const Position &end_pos, bool turn
         throw InvalidMoveException(5, "invalid move by the piece.", 2);
     }
 
+    // Detect castling before moving pieces so we can move rook too
+    bool isCastling = false;
+    Position rookStart(1, 1);
+    Position rookEnd(1, 1);
+    Rook* castlingRook = nullptr;
+
+    King* movingKing = dynamic_cast<King*>(piece_start);
+    if (movingKing != nullptr && start_pos.getY() == end_pos.getY() && std::abs(end_pos.getX() - start_pos.getX()) == 2) {
+        const int direction = (end_pos.getX() > start_pos.getX()) ? 1 : -1;
+        rookStart = Position(direction > 0 ? getWidth() : 1, start_pos.getY());
+        rookEnd = Position(start_pos.getX() + direction, start_pos.getY());
+
+        Piece* rookPiece = getPiece(rookStart);
+        castlingRook = dynamic_cast<Rook*>(rookPiece);
+        if (castlingRook != nullptr && castlingRook->getIsBlack() == piece_start->getIsBlack()) {
+            isCastling = true;
+        }
+    }
+
     movePiece(start_pos, end_pos);
+
+    if (isCastling) {
+        movePiece(rookStart, rookEnd);
+        castlingRook->firstMove = false;
+    }
+
+    if (Pawn* pawn = dynamic_cast<Pawn*>(piece_start)) {
+        pawn->firstMove = false;
+    }
+    if (Rook* rook = dynamic_cast<Rook*>(piece_start)) {
+        rook->firstMove = false;
+    }
+    if (King* king = dynamic_cast<King*>(piece_start)) {
+        king->firstMove = false;
+    }
 }
