@@ -7,7 +7,7 @@
 #include <string>
 
 #include "checkerboard.hpp"
-#include "helperFunctions.cpp"
+#include "helperFunctions.hpp"
 
 
 int main() {
@@ -19,7 +19,7 @@ int main() {
     std::cout << "|                       CHESS & CHECKERS                       |" << std::endl;
     std::cout << "+==============================================================+" << std::endl;
 
-    chessMain();
+    HelperFunctions::chessMain();
 
     // Checkerboard cb;
 

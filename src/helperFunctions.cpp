@@ -1,10 +1,7 @@
-#include <iostream>
-#include <sstream>
-#include <string>
-
+#include "helperFunctions.hpp"
 #include "checkerboard.hpp"
 
-void chessMain() {
+void HelperFunctions::chessMain() {
     Checkerboard cb;
     cb.initialConditions();
 
