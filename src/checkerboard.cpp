@@ -40,33 +40,35 @@ y ^
 Checkerboard::Checkerboard():Plateau(8, 8) {}
 
 bool Checkerboard::canEnPassantCapture(const Position &start_pos, const Position &end_pos) const {
+    // not possible if no move has been made yet
     if (_movesHistory.empty()) {
         return false;
     }
-
+    // assert is start_pos is a pawn
     const Piece* attacker = getPiece(start_pos);
     if (attacker == nullptr || dynamic_cast<const Pawn*>(attacker) == nullptr) {
         return false;
     }
-
+    // assert last move was a 2 square pawn advance
     const MoveRecord& lastMove = _movesHistory.top();
     if (dynamic_cast<const Pawn*>(lastMove.movedPiece) == nullptr) {
         return false;
     }
-
+    // assert last move was a 2 square advance in the same column
     if (std::abs(lastMove.to.getY() - lastMove.from.getY()) != 2) {
         return false;
     }
-
+    // assert last move ended adjacent to the attacker
     const Position side(end_pos.getX(), start_pos.getY());
     if (lastMove.to != side) {
         return false;
     }
-
+    // assert attacker is on correct rank for en passant
     return lastMove.turnBlack != attacker->getIsBlack();
 }
 
 Position Checkerboard::getEnPassantCapturedPosition(const Position &start_pos, const Position &end_pos) const {
+    // if fails then invalid position(0, 0)
     if (!canEnPassantCapture(start_pos, end_pos)) {
         return Position(0, 0);
     }
@@ -82,13 +84,13 @@ void Checkerboard::play(const Position &start_pos, const Position &end_pos, bool
         dynamic_cast<Pawn*>(movedPieceBefore) != nullptr &&
         canEnPassantCapture(start_pos, end_pos)) {
         capturedPositionBefore = getEnPassantCapturedPosition(start_pos, end_pos);
+        // en passant capture handling
         if (isInside(capturedPositionBefore)) {
             capturedPieceBefore = getPiece(capturedPositionBefore);
         }
     }
 
     const bool movedPieceWasFirstMove = getFirstMoveFlag(movedPieceBefore);
-
     Plateau::play(start_pos, end_pos, turnBlack);
 
     MoveRecord record {
