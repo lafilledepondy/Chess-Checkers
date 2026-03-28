@@ -13,7 +13,7 @@ bool King::isValidMove(const Position &start_pos, const Position &end_pos, bool 
     // no move
     if (dx == 0 && dy == 0) return false;
 
-    // castling only if king & rook never moved)
+    // castling only if king & rook never moved
     if (!isCapture && firstMove && dy == 0 && dx == 2) {
         const int direction = (deltaX > 0) ? 1 : -1;
         const int rookX = (direction > 0) ? board->getWidth() : 1;
@@ -21,7 +21,7 @@ bool King::isValidMove(const Position &start_pos, const Position &end_pos, bool 
 
         Piece* rookPiece = board->getPiece(rookPos);
         Rook* rook = dynamic_cast<Rook*>(rookPiece);
-
+        // rook is present && rook is myColor && rook didn't move
         if (rook == nullptr || rook->getIsBlack() != getIsBlack() || !rook->firstMove) {
             return false;
         }
@@ -40,8 +40,10 @@ bool King::isValidMove(const Position &start_pos, const Position &end_pos, bool 
     if (dx > 1 || dy > 1) return false;
 
     if (isCapture) {
+        // capture
         return target != nullptr && target->getIsBlack() != getIsBlack();
     } else {
+        // move
         return target == nullptr;
     }
 }

@@ -9,7 +9,6 @@ bool Bishop::isValidMove(const Position &start_pos, const Position &end_pos, boo
 
     // no move
     if (dx == 0 && dy == 0) return false;
-
     // must be diagonal
     if (dx != dy) return false;
 
@@ -25,10 +24,11 @@ bool Bishop::isValidMove(const Position &start_pos, const Position &end_pos, boo
         y += stepY;
     }
 
-    // capture
     if (isCapture) {
+        // capture
         return target != nullptr && target->getIsBlack() != getIsBlack();
     } else {
+        // move on a empty square
         return target == nullptr;
     }
 }

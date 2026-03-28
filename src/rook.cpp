@@ -9,8 +9,7 @@ bool Rook::isValidMove(const Position &start_pos, const Position &end_pos, bool 
 
     // no move
     if (dx == 0 && dy == 0) return false;
-
-    // straight line
+    // not straight line
     if (!(dx == 0 || dy == 0)) return false;
 
     // check path
@@ -26,10 +25,12 @@ bool Rook::isValidMove(const Position &start_pos, const Position &end_pos, bool 
         y += stepY;
     }
 
-    // capture
+    // capture?
     if (isCapture) {
+        // capured
         return target != nullptr && target->getIsBlack() != getIsBlack();
     } else {
+        // empty square
         return target == nullptr;
     }
 }

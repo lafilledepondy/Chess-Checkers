@@ -9,14 +9,13 @@ bool Cavalier::isValidMove(const Position &start_pos, const Position &end_pos, b
 
     // no move
     if (dx == 0 && dy == 0) return false;
-
     // 2 by 1 or 1 by 2
     if (!((dx == 2 && dy == 1) || (dx == 1 && dy == 2))) return false;
-
-    // capture
     if (isCapture) {
+        // capture
         return target != nullptr && target->getIsBlack() != getIsBlack();
     } else {
+        // move on a empty square
         return target == nullptr;
     }
 }

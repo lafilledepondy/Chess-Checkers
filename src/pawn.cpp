@@ -15,10 +15,8 @@ bool Pawn::isValidMove(const Position &start_pos, const Position &end_pos, bool 
     if (dx == 0) {
         // cannot move forward into a piece
         if (target != nullptr) return false;
-
         // 1 step forward
         if (dy == direction) return true;
-
         // 2 steps forward first move only
         if (firstMove && dy == 2 * direction) {
             Position mid(start_pos.getX(), start_pos.getY() + direction);
@@ -28,18 +26,17 @@ bool Pawn::isValidMove(const Position &start_pos, const Position &end_pos, bool 
                 return true;
             }
         }
-
+        
         return false;
     }
 
     // capture
     if (std::abs(dx) == 1 && dy == direction) {
-
         // normal capture
         if (target != nullptr && target->getIsBlack() != getIsBlack()) {
             return true;
         }
-
+        // en passant 
         if (target == nullptr) {
             Position side(end_pos.getX(), start_pos.getY());
             const Piece* sidePawn = board->getPiece(side);
