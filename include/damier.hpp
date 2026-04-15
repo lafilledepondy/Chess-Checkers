@@ -4,7 +4,8 @@
 #include <vector>
 
 #include "pion.hpp"
-#include "dames.hpp"
+#include "dame.hpp"
+#include "movesPile.hpp"
 
 class Damier: public Plateau {
     private:
