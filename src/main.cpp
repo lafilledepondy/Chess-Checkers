@@ -11,13 +11,16 @@
 #include <vector>
 
 #include "checkerboard.hpp"
+#include "damier.hpp"
+
+template <typename BoardType> // used so that the pseudoMain is common for Chess and jeuDD
 
 void replaySavedGame(const std::string& filePath) {
-    Checkerboard replayBoard;
+    BoardType replayBoard;
     replayBoard.initialConditions();
 
     // 
-    const std::vector<Checkerboard::ReplayMove> moves = replayBoard.readMovesFromFile(filePath);
+    const std::vector<typename BoardType::ReplayMove> moves = replayBoard.readMovesFromFile(filePath);
     if (moves.empty()) {
         std::cout << "No replayable move found in: " << filePath << "\n";
         return;
@@ -41,7 +44,7 @@ void replaySavedGame(const std::string& filePath) {
                 continue;
             }
             // play next move
-            const Checkerboard::ReplayMove& move = moves[currentMove];
+            const typename BoardType::ReplayMove& move = moves[currentMove];
             try {
                 replayBoard.play(move.from, move.to, move.turnBlack);
                 ++currentMove;
@@ -62,7 +65,7 @@ void replaySavedGame(const std::string& filePath) {
 
         if (command == "a") { // autoplay
             while (currentMove < moves.size()) {
-                const Checkerboard::ReplayMove& move = moves[currentMove];
+                const typename BoardType::ReplayMove& move = moves[currentMove];
                 try {
                     replayBoard.play(move.from, move.to, move.turnBlack);
                     ++currentMove;
@@ -85,8 +88,8 @@ void replaySavedGame(const std::string& filePath) {
     }
 }
 
-void chessMain() {
-    Checkerboard cb;
+template <typename BoardType>
+void pseudoMain(BoardType& cb) {
     cb.initialConditions();
 
     std::string input; 
@@ -109,7 +112,7 @@ void chessMain() {
 
         if (input.rfind("replay ", 0) == 0 && input.size() > 7) { // replay <file>
             const std::string filePath = input.substr(7);
-            replaySavedGame(filePath); // call the replay function (defined above)
+            replaySavedGame<BoardType>(filePath); // call the replay function (defined above)
             continue;
         }
 
@@ -147,10 +150,6 @@ void chessMain() {
     }
 }
 
-void jeuDeDamesMain() {
-    std::cout << "jeuDeDames" << std::endl;
-}
-
 int main() {
 
     for(int i = 0; i < 100; ++i) {
@@ -161,7 +160,6 @@ int main() {
     std::cout << "+==============================================================+" << std::endl;
 
     std::string gameInput;
-
     while (true) {
         std::cout << "Choose a game (chess | dames | quit):\n> ";
         if (!(std::cin >> gameInput)) {
@@ -169,12 +167,16 @@ int main() {
         }
         if (gameInput == "chess") {
             std::cout << "=============== CHESS ===============" << std::endl;
-            chessMain();
+            Checkerboard cb;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            pseudoMain(cb);
             break;
         }
         if (gameInput == "dames") {
             std::cout << "=========== JEU DE DAMES ============" << std::endl;
-            jeuDeDamesMain();
+            Damier damier;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            pseudoMain(damier);
             break;
         }
         if (gameInput == "quit") {
@@ -190,6 +192,12 @@ int main() {
     
     // std::cout << cb.toString() << std::endl;
     // std::cout << cb.toUnicodeString() << std::endl;
+
+    // Damier damier;
+    // damier.initialConditions();
+
+    // std::cout << damier.toString() << std::endl;
+    // std::cout << damier.toUnicodeString() << std::endl;    
 
     return 0;
 }

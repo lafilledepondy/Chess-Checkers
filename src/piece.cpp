@@ -27,6 +27,8 @@ std::string Piece::toUnicodeString() const {
     if (_name == "bishop") {return _isBlack ? "♝" : "♗";}
     if (_name == "queen") {return _isBlack ? "♛" : "♕";}
     if (_name == "king") {return _isBlack ? "♚" : "♔";}
+    if (_name == "pion") {return _isBlack ? "●" : "○";}
+    if (_name == "dame") {return _isBlack ? "⛃" : "⛁";}    
     // unknown piece
     return "?";
 }
