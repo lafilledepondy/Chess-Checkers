@@ -14,7 +14,7 @@ void Damier::promotePawnIfNeeded(const Position &end_pos, MoveRecord &record) {
     if (pawn == nullptr) {
         return;
     }
-
+    // last row
     const bool reachesLastRow = (pawn->getIsBlack() && end_pos.getY() == getHeight()) ||
                                 (!pawn->getIsBlack() && end_pos.getY() == 1);
     if (!reachesLastRow) {
@@ -34,14 +34,14 @@ void Damier::play(const Position &start_pos, const Position &end_pos, bool turnB
     bool isJumpCapture = false;
     Position jumpCapturedPos = end_pos;
 
-    if (movedPieceBefore != nullptr) {
+    if (movedPieceBefore != nullptr) { // handdle jump capture
         const int dx = end_pos.getX() - start_pos.getX();
         const int dy = end_pos.getY() - start_pos.getY();
 
         if (std::abs(dx) == 2 && std::abs(dy) == 2) {
             jumpCapturedPos = Position(start_pos.getX() + dx / 2, start_pos.getY() + dy / 2);
             Piece* jumpedPiece = getPiece(jumpCapturedPos);
-
+            // advicer piece
             if (jumpedPiece != nullptr && jumpedPiece->getIsBlack() != movedPieceBefore->getIsBlack()) {
                 isJumpCapture = true;
                 capturedPieceBefore = jumpedPiece;
@@ -102,6 +102,7 @@ bool Damier::undoLastMove() {
 }
 
 void Damier::initialConditions() {
+    // BLACK
     for (int y = 1; y <= 4; ++y) {
         for (int x = 1; x <= 10; ++x) {
             if ((x + y) % 2 == 0) {
@@ -109,7 +110,7 @@ void Damier::initialConditions() {
             }
         }
     }
-
+    // WHITE
     for (int y = 7; y <= 10; ++y) {
         for (int x = 1; x <= 10; ++x) {
             if ((x + y) % 2 == 0) {

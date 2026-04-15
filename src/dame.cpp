@@ -10,10 +10,11 @@ bool Dame::isValidMove(const Position &start_pos, const Position &end_pos, bool 
 	const int absDx = std::abs(dx);
 	const int absDy = std::abs(dy);
 
+    // deplacement non nul
 	if (dx == 0 && dy == 0) {
 		return false;
 	}
-
+    // move diagonal
 	if (absDx != absDy) {
 		return false;
 	}
@@ -22,7 +23,7 @@ bool Dame::isValidMove(const Position &start_pos, const Position &end_pos, bool 
 	const int stepY = (dy > 0) ? 1 : -1;
 	int x = start_pos.getX() + stepX;
 	int y = start_pos.getY() + stepY;
-
+    // chemin empty
 	while (x != end_pos.getX() && y != end_pos.getY()) {
 		if (board->getPiece(Position(x, y)) != nullptr) {
 			return false;
