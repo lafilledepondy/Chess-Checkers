@@ -1,46 +1,54 @@
-# Chess & Jeu de Dames
+# Chess and Checkers
+
+C++ project with two board games:
+
+- Chess
+- Jeu de Dames (french version of Checkers)
+
+## Rules
+
+### Chess Rules
+
+Check the official rules of chess on [FIDE's website](https://www.fide.com). You can check this pdf for a quick overview: [Chess Rules PDF](FIDE_LawsOfChess.pdf).
+Or you can also refer to [Chess.com](https://www.chess.com/learn-how-to-play-chess) for a beginner-friendly guide.
+
+### Jeu de Dames Rules
+
+Check the official rules of Jeu de Dames on [Fédération Française du Jeu de Dames](https://www.ffjd.fr/Web/index.php?page=reglesdujeu).
 
 ## Demo
 
-## Chess
+### Chess Demo
 
-![Chess Demo]()
+<video width="700" controls>
+  <source src="assets/liveDemo_chess.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
-### Rules of Chess
+You can also use local demo files from [demo_chess](demo_chess).
 
-## Jeu de Dames
+### Jeu de Dames Demo
 
-![Jeu de Dames Demo]()
+<video width="700" controls>
+  <source src="assets/liveDemo_jDD.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
 
-### Rules of Jeu de Dames
+You can also use local demo files from [demo_jeu_de_dames](demo_jDD).
 
-## Get Started
+## Build and Run
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/lafilledepondy/chess_and_jeuDeDames.git
-   cd chess_and_jeuDeDames
-   ```
-2. Build the project:
-   ```bash
-   make
-   ```
-3. Run the tests:
-   ```bash
-   make test
-   ```
+```bash
+make
+./main
+```
 
-## Requirements
+## Run Tests
 
-- C++17 compatible compiler
-- CMake 3.10 or higher
-
-## Project Structure
-
-- `src/`: Contains the source code for the chess and jeu de dames implementations.
-- `tests/`: Contains unit tests for both games.
-- `CMakeLists.txt`: CMake configuration file.
+```bash
+make test
+```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+MIT License. See [LICENSE](LICENSE).
