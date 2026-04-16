@@ -59,20 +59,3 @@ std::string Piece::toUnicodeString() const {
     // unknown piece
     return "?";
 }
-
-std::vector<Position> Piece::getValidMoves(const Position& start, const Plateau* plateau) const {
-    std::vector<Position> possibleMoves_vec;
-    // 2D table 
-    for (int x = 1; x <= plateau->getWidth(); x++) {
-        for (int y = 1; y <= plateau->getHeight(); y++) {
-            Position end(x, y); 
-            bool isCapture = (plateau->getPiece(end) != nullptr);
-            // check is valid move and not the same position
-            if (!(end == start) && isValidMove(start, end, isCapture, const_cast<Plateau*>(plateau))) {
-                possibleMoves_vec.push_back(end);
-            }
-        }
-    }
-    // return a 1D<Position> vector containing all possible moves for this piece from the start position
-    return possibleMoves_vec;
-}

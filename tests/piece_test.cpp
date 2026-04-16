@@ -44,15 +44,13 @@ TEST(PieceTest, ToStringWhite) {
     EXPECT_EQ(piece1.toString(), "pa");
 }
 
-TEST(PieceTest, GetValidMovesAll) {
+TEST(PieceTest, IsValidMoveStubAlwaysTrue) {
     TestPiece piece(true, "pawn");
-    TestPlateau board(8,8);
+    TestPlateau board(8, 8);
+    Position start(1, 1);
+    Position end(8, 8);
 
-    Position start(1,1);
-
-    std::vector<Position> moves = piece.getValidMoves(start, &board);
-
-    EXPECT_EQ(moves.size(), 63);
+    EXPECT_TRUE(piece.isValidMove(start, end, false, &board));
 }
 
 TEST(PieceTest, UnicodeSymbolsBlack) {
