@@ -33,10 +33,8 @@ void Plateau::addCaptureScore(bool capturerBlack, const Piece* capturedPiece) {
     const int value = capturedPiece->getScoreValue();
     if (capturerBlack) {
         blackScore += value;
-        whiteScore -= value;
     } else {
         whiteScore += value;
-        blackScore -= value;
     }
 }
 
@@ -48,10 +46,8 @@ void Plateau::undoCaptureScore(bool capturerBlack, const Piece* capturedPiece) {
     const int value = capturedPiece->getScoreValue();
     if (capturerBlack) {
         blackScore -= value;
-        whiteScore += value;
     } else {
         whiteScore -= value;
-        blackScore += value;
     }
 }
 

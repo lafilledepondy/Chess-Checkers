@@ -8,6 +8,8 @@ public:
     TestPlateau(int h, int w) : Plateau(h, w) {}
 
     using Plateau::addPiece;
+    using Plateau::addCaptureScore;
+    using Plateau::undoCaptureScore;
     using Plateau::movePiece;
 
     void initialConditions() override {}
@@ -117,4 +119,30 @@ TEST(PlateauTest, PlayThrowsSameColor) {
     p.addPiece(p2,end);
 
     EXPECT_THROW(p.play(start,end,true), InvalidMoveException);
+}
+
+TEST(PlateauTest, CaptureScoreTracksRawCapturedMaterial) {
+    TestPlateau p(8,8);
+    TestPiece capturedWhite(false);
+    TestPiece capturedBlack(true);
+
+    EXPECT_EQ(p.getScore(false), 0);
+    EXPECT_EQ(p.getScore(true), 0);
+
+    p.addCaptureScore(true, &capturedWhite);
+    EXPECT_EQ(p.getScore(true), 1);
+    EXPECT_EQ(p.getScore(false), 0);
+    EXPECT_EQ(p.getMaterialAdvantage(true), 1);
+    EXPECT_EQ(p.getMaterialAdvantage(false), -1);
+
+    p.addCaptureScore(false, &capturedBlack);
+    EXPECT_EQ(p.getScore(true), 1);
+    EXPECT_EQ(p.getScore(false), 1);
+    EXPECT_EQ(p.getMaterialAdvantage(true), 0);
+    EXPECT_EQ(p.getMaterialAdvantage(false), 0);
+
+    p.undoCaptureScore(false, &capturedBlack);
+    p.undoCaptureScore(true, &capturedWhite);
+    EXPECT_EQ(p.getScore(true), 0);
+    EXPECT_EQ(p.getScore(false), 0);
 }
