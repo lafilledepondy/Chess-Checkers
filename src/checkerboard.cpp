@@ -22,6 +22,7 @@ namespace {
     }
 
     constexpr const char* ANSI_RESET = "\x1b[0m";
+    // constexpr const char* ANSI_LAST_MOVE = "\x1b[48;5;220m"; // yellow
     constexpr const char* ANSI_LIGHT_SQUARE = "\x1b[48;5;180m"; //wood color
     constexpr const char* ANSI_DARK_SQUARE = "\x1b[48;5;94m"; //bright wood color
     constexpr const char* ANSI_WHITE_PIECE = "\x1b[38;5;231m"; // white
@@ -240,10 +241,10 @@ std::string Checkerboard::toUnicodeString() const {
     for (int x = 0; x <= getWidth(); x++) {
         for (int y = 0; y <= getHeight(); y++) {
             if (x == 0 && y == 0) {
-                oss << "  ";
+                oss << "   ";
             }
             else if (x != 0 && y == 0) {
-                oss << std::to_string(x) << " ";
+                oss << std::to_string(x) << "  ";
             }
             else if (x == 0 && y != 0) {
                 oss << " " <<char('A' + y - 1) << " ";
