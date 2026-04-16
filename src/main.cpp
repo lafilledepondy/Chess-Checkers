@@ -304,11 +304,18 @@ void pseudoMain(BoardType& cb) {
             continue;
         }
 
-        std::istringstream iss(input);
+        std::string normalizedInput = input;
+        for (char& c : normalizedInput) {
+            if (c == ',') {
+                c = ' ';
+            }
+        }
+
+        std::istringstream iss(normalizedInput);
         std::string startStr, endStr;
         // error handling for the input format 
         if (!(iss >> startStr >> endStr)) {
-            std::cout << "Invalid format. Use: `D6 D4`\n";
+            std::cout << "Invalid format. Use: D6 D4 or D6,D4\n";
             continue;
         }
 
