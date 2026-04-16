@@ -42,4 +42,9 @@ class Checkerboard: public Plateau {
         std::vector<ReplayMove> readMovesFromFile(const std::string& filename) const;
         void loadFromFile(const std::string& filename);
         void saveToFile(const std::string& filename) const;
+
+        // state helpers
+        bool isInCheck(bool kingBlack) const;
+        bool isCheckmate(bool kingBlack) const;
+        bool isStalemate(bool playerBlack) const;
 };

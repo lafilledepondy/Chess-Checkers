@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <type_traits>
 #include <vector>
 
 #include "checkerboard.hpp"
@@ -317,6 +318,23 @@ void pseudoMain(BoardType& cb) {
 
             cb.play(start, end, turnBlack);
             turnBlack = !turnBlack; // switch player
+
+            if constexpr (std::is_same_v<BoardType, Checkerboard>) {
+                if (cb.isCheckmate(turnBlack)) {
+                    std::cout << cb.toUnicodeString() << std::endl;
+                    std::cout << "CHECKMATE! "
+                              << (turnBlack ? "White" : "Black")
+                              << " wins.\n";
+                    break;
+                }
+
+                if (cb.isStalemate(turnBlack)) {
+                    std::cout << cb.toUnicodeString() << std::endl;
+                    std::cout << "STALEMATE! The game is a draw.\n";
+                    break;
+                }
+            }
+
             // spacing from the previous player
             std::cout << "\n";
             std::cout << "\n";

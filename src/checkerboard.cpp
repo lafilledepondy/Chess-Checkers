@@ -6,8 +6,128 @@
 #include <sstream>
 #include <vector>
 
+#include "exception.hpp"
+
 // to avoid code duplication for firstMove flag in Pawn;Rook; King
 namespace {
+    Position findKingPosition(const Checkerboard& board, bool kingBlack) {
+        // run through all squares
+        for (int y = 1; y <= board.getHeight(); ++y) {
+            for (int x = 1; x <= board.getWidth(); ++x) {
+                const Position pos(x, y);
+                const Piece* piece = board.getPiece(pos);
+                const King* king = dynamic_cast<const King*>(piece);
+                // return king color correct pos
+                if (king != nullptr && king->getIsBlack() == kingBlack) {
+                    return pos;
+                }
+            }
+        }
+        return Position(0, 0); //else invalid pos
+    }
+
+    bool pieceAttacksSquare(const Piece* attacker, const Position& from, const Position& target, Plateau* board) {
+        // attacker !empty
+        if (attacker == nullptr) {
+            return false;
+        }
+
+        const int dx = target.getX() - from.getX();
+        const int dy = target.getY() - from.getY();
+        // pawn attacks
+        if (dynamic_cast<const Pawn*>(attacker) != nullptr) {
+            const int direction = attacker->getIsBlack() ? 1 : -1;
+            return std::abs(dx) == 1 && dy == direction;
+        }
+        // king attacks
+        if (dynamic_cast<const King*>(attacker) != nullptr) {
+            return std::abs(dx) <= 1 && std::abs(dy) <= 1 && !(dx == 0 && dy == 0);
+        }
+        // other pieces
+        Piece* targetPiece = board->getPiece(target);
+        return attacker->isValidMove(from, target, targetPiece != nullptr, board);
+    }
+
+    bool isSquareUnderAttack(const Checkerboard& board, const Position& square, bool attackerBlack) {
+        Checkerboard* mutableBoard = const_cast<Checkerboard*>(&board);
+        // run through all squares to find attackers
+        for (int y = 1; y <= board.getHeight(); ++y) {
+            for (int x = 1; x <= board.getWidth(); ++x) {
+                const Position from(x, y);
+                const Piece* attacker = board.getPiece(from);
+                // only consider pieces of the attacking color
+                if (attacker == nullptr || attacker->getIsBlack() != attackerBlack) {
+                    continue;
+                }
+                // check if this piece attacks the target square
+                if (pieceAttacksSquare(attacker, from, square, mutableBoard)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    bool hasAnyLegalMove(const Checkerboard& board, bool playerBlack) {
+        Checkerboard* mutableBoard = const_cast<Checkerboard*>(&board);
+        // run through all squares to find player's pieces
+        for (int y = 1; y <= board.getHeight(); ++y) {
+            for (int x = 1; x <= board.getWidth(); ++x) {
+                const Position from(x, y);
+                Piece* movingPiece = mutableBoard->getPiece(from);
+                // only consider pieces of the player's color
+                if (movingPiece == nullptr || movingPiece->getIsBlack() != playerBlack) {
+                    continue;
+                }
+                // try all possible moves for this piece
+                for (int toY = 1; toY <= board.getHeight(); ++toY) {
+                    for (int toX = 1; toX <= board.getWidth(); ++toX) {
+                        const Position to(toX, toY);
+                        if (to == from) {
+                            continue;
+                        }
+                        // skip moves that capture player's own pieces
+                        Piece* target = mutableBoard->getPiece(to);
+                        if (target != nullptr && target->getIsBlack() == playerBlack) {
+                            continue;
+                        }
+                        // castling possible if not under check
+                        const int deltaX = to.getX() - from.getX();
+                        const int deltaY = to.getY() - from.getY();
+                        if (dynamic_cast<King*>(movingPiece) != nullptr && deltaY == 0 && std::abs(deltaX) == 2) {
+                            // king moves 2 squares horizontally => castling attempt
+                            if (board.isInCheck(playerBlack)) {
+                                continue;
+                            }
+                            const int direction = (deltaX > 0) ? 1 : -1;
+                            const Position intermediate(from.getX() + direction, from.getY());
+                            // else illegal move
+                            if (isSquareUnderAttack(board, intermediate, !playerBlack)) {
+                                continue;
+                            }
+                        }
+
+                        try {
+                            mutableBoard->play(from, to, playerBlack);
+                        }
+                        catch (const std::exception&) {
+                            continue;
+                        }
+
+                        const bool leavesKingInCheck = mutableBoard->isInCheck(playerBlack);
+                        mutableBoard->undoLastMove();
+                        // checkmate
+                        if (!leavesKingInCheck) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     bool getFirstMoveFlag(const Piece* piece) {
         if (const Pawn* pawn = dynamic_cast<const Pawn*>(piece)) return pawn->firstMove;
         if (const Rook* rook = dynamic_cast<const Rook*>(piece)) return rook->firstMove;
@@ -50,6 +170,23 @@ y ^
 
 Checkerboard::Checkerboard():Plateau(8, 8) {}
 
+bool Checkerboard::isInCheck(bool kingBlack) const {
+    const Position kingPos = findKingPosition(*this, kingBlack);
+    // king missing -> false
+    if (!isInside(kingPos)) {
+        return false;
+    }
+    return isSquareUnderAttack(*this, kingPos, !kingBlack);
+}
+
+bool Checkerboard::isCheckmate(bool kingBlack) const {
+    return isInCheck(kingBlack) && !hasAnyLegalMove(*this, kingBlack);
+}
+
+bool Checkerboard::isStalemate(bool playerBlack) const {
+    return !isInCheck(playerBlack) && !hasAnyLegalMove(*this, playerBlack);
+}
+
 bool Checkerboard::canEnPassantCapture(const Position &start_pos, const Position &end_pos) const {
     // not possible if no move has been made yet
     if (_movesHistory.empty()) {
@@ -91,6 +228,23 @@ void Checkerboard::play(const Position &start_pos, const Position &end_pos, bool
     Piece* capturedPieceBefore = getPiece(end_pos);
     Position capturedPositionBefore = end_pos;
 
+    // Castling cannot start from check and cannot pass through an attacked square.
+    if (King* movingKing = dynamic_cast<King*>(movedPieceBefore)) {
+        const int deltaX = end_pos.getX() - start_pos.getX();
+        const int deltaY = end_pos.getY() - start_pos.getY();
+        if (movingKing->firstMove && deltaY == 0 && std::abs(deltaX) == 2) {
+            if (isInCheck(turnBlack)) {
+                throw InvalidMoveException(6, "castling is illegal while king is in check.", 2);
+            }
+
+            const int direction = (deltaX > 0) ? 1 : -1;
+            const Position intermediate(start_pos.getX() + direction, start_pos.getY());
+            if (isSquareUnderAttack(*this, intermediate, !turnBlack)) {
+                throw InvalidMoveException(7, "castling through an attacked square is illegal.", 2);
+            }
+        }
+    }
+
     // en passant capture check
     if (capturedPieceBefore == nullptr &&
         dynamic_cast<Pawn*>(movedPieceBefore) != nullptr &&
@@ -118,10 +272,17 @@ void Checkerboard::play(const Position &start_pos, const Position &end_pos, bool
         capturedPositionBefore,
         movedPieceWasFirstMove,
         false,
-        nullptr
+        nullptr,
+        {}
     };
     // to save the move in history 
     _movesHistory.push(record);
+
+    // Any move that leaves own king in check is illegal and must be rolled back.
+    if (isInCheck(turnBlack)) {
+        undoLastMove();
+        throw InvalidMoveException(8, "move leaves own king in check.", 2);
+    }
 }
 
 bool Checkerboard::canUndo() const {

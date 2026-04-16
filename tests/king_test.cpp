@@ -2,6 +2,23 @@
 
 #include "exception.hpp"
 #include "checkerboard.hpp"
+#include "king.hpp"
+#include "pawn.hpp"
+
+class KingBoardAccess : public Checkerboard {
+public:
+    void clearBoard() {
+        for (int y = 1; y <= getHeight(); ++y) {
+            for (int x = 1; x <= getWidth(); ++x) {
+                addPiece(nullptr, Position(x, y));
+            }
+        }
+    }
+
+    void placePiece(Piece* piece, const Position& pos) {
+        addPiece(piece, pos);
+    }
+};
 
 Checkerboard setupKingBoard() {
     Checkerboard cb;
@@ -39,16 +56,14 @@ TEST(KingTest, CannotMoveOntoOwnPiece) {
 }
 
 TEST(KingTest, CaptureEnemy) {
-    Checkerboard cb = setupKingBoard();
+    KingBoardAccess cb;
+    cb.clearBoard();
 
-    cb.play(Position("C2"), Position("C4"), true);   
-    cb.play(Position("C4"), Position("C5"), true);   
-    cb.play(Position("C5"), Position("C6"), true);   
-    cb.play(Position("E8"), Position("D7"), false);
+    cb.placePiece(new King(false), Position("E4"));
+    cb.placePiece(new King(true), Position("A8"));
+    cb.placePiece(new Pawn(true), Position("D5"));
 
-    EXPECT_NO_THROW(
-        cb.play(Position("D7"), Position("C6"), false);
-    );
+    EXPECT_NO_THROW(cb.play(Position("E4"), Position("D5"), false));
 }
 
 TEST(KingTest, SamePositionThrows) {
